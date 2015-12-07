@@ -1,0 +1,43 @@
+
+body {
+  background-color: lightBlue;
+}
+
+#default-categories {
+  float: left;
+  max-width: 50%;
+}
+
+#default-inner-holder {
+}
+
+#target-categories {
+  float: right;
+  max-width: 50%;
+}
+
+.parent {
+  float: left;
+  background-color: lightGray;
+  margin: 10px;
+}
+
+.sub-holder {
+  clear: left;
+}
+
+.sub {
+  overflow: auto;
+  clear: left;
+  margin: 5px;
+}
+
+.mapping {
+  display: inline;
+  margin: 4px;
+  background-color: lightYellow; 
+}
+
+.mapped {
+  background-color: lightGreen;
+}
