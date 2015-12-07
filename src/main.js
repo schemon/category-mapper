@@ -32,8 +32,8 @@ server.get('/category/:id/map', function(req, res, next) {
       getFile('map.js', function(mapScript) {
         getFile('map.css', function(mapCss) {
 
-          mapHtml = mapHtml.replace('###categoryData###', categoryData);
           mapHtml = mapHtml.replace('###mapScript###', mapScript);
+          mapHtml = mapHtml.replace('###categoryData###', categoryData);
           mapHtml = mapHtml.replace('###css###', mapCss);
 
           res.setHeader('Content-Type', 'text/html');
@@ -67,7 +67,7 @@ server.post('/category', function(req, res, next) {
     res.send({
       success: true, 
       id: id,
-      url: "http://huvuddator.ddns.net/category/" +id
+      url: "http://huvuddator.ddns.net/category/" +id +"/map"
     });
     next();
   });

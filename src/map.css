@@ -1,6 +1,7 @@
 
 body {
   background-color: lightBlue;
+  font-family: sans-serif;
 }
 
 #default-categories {
@@ -18,7 +19,7 @@ body {
 
 .parent {
   float: left;
-  background-color: lightGray;
+  background-color: #EEE;
   margin: 10px;
 }
 
@@ -32,12 +33,35 @@ body {
   margin: 5px;
 }
 
+.category {
+  padding: 5px;
+}
+
 .mapping {
   display: inline;
   margin: 4px;
-  background-color: lightYellow; 
+  background-color: #FFFFAA; 
 }
 
-.mapped {
+.sub.category.default {
+  background-color: #FFAAAA;
+}
+
+.sub.category.default.mapped {
+  background-color: lightGreen;
+}
+
+.category.target {
+  width: 90%;
+}
+
+.category.glurk {
+  float: right;
+  padding: 2px;
+  margin: 5px;
+  background-color: lightYellow;
+}
+
+.sub.category.glurk {
   background-color: lightGreen;
 }
