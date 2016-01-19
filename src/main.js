@@ -1,5 +1,7 @@
 var restify = require('restify');
 var fs = require('fs');
+var request = require('request');
+
 
 var server = restify.createServer();
 server.use(restify.bodyParser());
@@ -19,14 +21,14 @@ function getFile(filename, onSuccess) {
   });
 }
 
-server.get('/category/:id', function(req, res, next) {
+server.get('/category/tree/:id', function(req, res, next) {
   getFile(getCatFileUri(req.params.id), function(data) {
     res.send(JSON.parse(data));
     next();
   });
 });
 
-server.get('/category/:id/map', function(req, res, next) {
+server.get('/category/tree/:id/map', function(req, res, next) {
   getFile(getCatFileUri(req.params.id), function(categoryData) {
     getFile('map.html', function(mapHtml) {
       getFile('map.js', function(mapScript) {
@@ -53,7 +55,7 @@ function createUUID() {
 }
 
 
-server.post('/category', function(req, res, next) {
+server.post('/category/tree', function(req, res, next) {
   console.log("saving cat data");
   console.log(req);
 
@@ -67,13 +69,60 @@ server.post('/category', function(req, res, next) {
     res.send({
       success: true, 
       id: id,
-      url: "http://huvuddator.ddns.net/category/" +id +"/map"
+      url: "http://huvuddator.ddns.net/category/tree/" +id +"/map"
     });
     next();
   });
 });
 
 
+
+server.get('/category/icon/:storeName', function(req, res, next) {
+  var url = "https://appdoor2cache.appland.se/api/cdn?REQ=%7B%22CategoryListReq%22%3A%7B%22clientPlatform%22%3A%221%22%2C%22language%22%3A%22en%22%2C%22pv%22%3A800%2C%22store%22%3A%22"
+  +req.params.storeName
+  +"%22%7D%7D";
+  request(url, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var resp = JSON.parse(body);
+      var cats = resp.CategoryListResp.category;
+      var version = parseInt(cats[0].iconUri.split('/')[5]) + 1;
+
+      var catScript = cats.filter(function(item) {
+        return item.parentCategoryId == 0;
+      }).map(function(item) {
+        return item.iconUri;
+      }).reduce(function(result, item, index) {
+        if(index == 1) {
+          result = formatIconItem(result);
+        }
+
+        return result + formatIconItem(item);
+      });
+
+
+      catScript = "mkdir " +version 
+        +"<br>echo " +version +" > placeholder"
+        +"<br>cd " +version
+        +"<br>" +catScript;
+
+
+      res.setHeader('Content-Type', 'text/html');
+      res.writeHead(200);
+      res.end(catScript);
+
+    } else {
+      res.send('error: ' +error);
+    }
+    next();
+
+  });
+});
+
+function formatIconItem(item) {
+  return '<br>' +'wget ' +item;
+}
+
 server.listen(8081, function() {
   console.log('%s listening at %s', server.name, server.url);
 });
+
